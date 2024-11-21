@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart with Text</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('https://th.bing.com/th/id/OIP.Lwax5hdkB6PPlhtg13fdEwHaFj?rs=1&pid=ImgDetMain');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+    }
+
+    .heart {
+      width: 200px;
+      height: 200px;
+      background-image: url('https://static.vecteezy.com/system/resources/previews/035/729/811/non_2x/valentine-s-heart-greeting-card-illustration-vector.jpg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      position: absolute;
+      transition: transform 0.2s ease;
+    }
+
+    .line {
+      position: absolute;
+      top: 10px;
+      font-size: 1.2rem;
+      color: black;
+      text-align: center;
+      padding: 10px;
+      border: 2px solid black;
+      width: 150px;
+      text-transform: capitalize;
+      font-weight: bold;
+      font-style: italic;
+      cursor: pointer;
+    }
+
+    .line:hover {
+      color: gray;
+      transform: scale(1.1);
+      transition: 0.3s ease-in-out;
+    }
+
+    .message {
+      font-size: 2.5rem;
+      color: #800080; /* Purple color */
+      font-weight: bold;
+      font-style: italic;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
+      display: none; /* Initially hidden */
+    }
+
+    .small-message {
+      font-size: 1.5rem;
+      color: darkblue; /* Dark blue color */
+      font-weight: bold;
+      position: absolute;
+      top: 60%;
+      transform: translateY(-50%);
+      text-align: center;
+      display: none; /* Initially hidden */
+    }
+
+    .small-heart {
+      width: 50px;
+      height: 50px;
+      background-image: url('https://static.vecteezy.com/system/resources/previews/035/729/811/non_2x/valentine-s-heart-greeting-card-illustration-vector.jpg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="line" onclick="handleClick()">Click here my baby ❤️</div>
+
+  <script>
+    let firstClick = true; // Track if it's the first click
+
+    function handleClick() {
+      if (firstClick) {
+        showFirstMessage(); // Show "I love you baby" on the first click
+        firstClick = false;
+      } else {
+        showHearts(); // Show hearts on subsequent clicks
+      }
+    }
+
+    function showFirstMessage() {
+      // Display "I love you baby"
+      const message = document.createElement('div');
+      message.classList.add('message');
+      message.innerText = "I love you baby";
+      document.body.appendChild(message);
+      message.style.display = 'block'; // Show the message
+
+      // Remove the message after 3 seconds and show hearts
+      setTimeout(() => {
+        document.body.removeChild(message);
+        showHearts(); // Show the hearts after the message disappears
+      }, 3000); // 3 seconds
+    }
+
+    function showHearts() {
+      // Create two hearts
+      for (let i = 0; i < 2; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        document.body.appendChild(heart);
+
+        // Position the hearts randomly
+        heart.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+        heart.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+
+        makeDraggable(heart); // Make the heart draggable
+      }
+
+      // Show "Click Again Baby" message
+      showSmallMessage();
+    }
+
+    function showSmallMessage() {
+      const smallMessage = document.createElement('div');
+      smallMessage.classList.add('small-message');
+      smallMessage.innerHTML = `Click Again Baby <span class="small-heart"></span>`; // Small heart next to the text
+      document.body.appendChild(smallMessage);
+      smallMessage.style.display = 'block'; // Show the message
+
+      // Remove the message after 2 seconds
+      setTimeout(() => {
+        document.body.removeChild(smallMessage);
+      }, 2000); // 2 seconds
+    }
+
+    function makeDraggable(heart) {
+      let isMouseDown = false;
+      let offsetX, offsetY;
+
+      heart.addEventListener('mousedown', function (e) {
+        isMouseDown = true;
+        offsetX = e.clientX - heart.offsetLeft;
+        offsetY = e.clientY - heart.offsetTop;
+        heart.style.transition = ''; // Disable transition while dragging
+      });
+
+      document.addEventListener('mousemove', function (e) {
+        if (isMouseDown) {
+          heart.style.left = Math.min(window.innerWidth - heart.offsetWidth, Math.max(0, e.clientX - offsetX)) + 'px';
+          heart.style.top = Math.min(window.innerHeight - heart.offsetHeight, Math.max(0, e.clientY - offsetY)) + 'px';
+        }
+      });
+
+      document.addEventListener('mouseup', function () {
+        isMouseDown = false;
+        heart.style.transition = 'transform 0.2s ease'; // Re-enable transition after dragging
+      });
+    }
+  </script>
+
+</body>
+</html>
